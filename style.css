@@ -7,54 +7,32 @@
 
 body {
     background: #f8f9fa;
-    color: #212529;
-    height: 100vh;
-    overflow: hidden;
 }
 
 .top-bar {
     background: #dc3545;
     color: white;
-    padding: 12px 16px;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    z-index: 1000;
+    padding: 14px 10px;
 }
 
 .top-bar h1 {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 .top-bar p {
-    font-size: 0.8rem;
+    font-size: 13px;
     opacity: 0.9;
 }
 
 #map {
-    height: calc(100vh - 70px);
     width: 100%;
+    height: calc(100vh - 72px);
 }
 
-.leaflet-control-locate {
-    background: white;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 18px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-.leaflet-control-locate.active {
-    background: #dc3545;
-    color: white;
-}
-
-.error {
+/* Error message */
+#error-message {
     position: fixed;
     bottom: 20px;
     left: 50%;
@@ -63,25 +41,49 @@ body {
     color: white;
     padding: 10px 14px;
     border-radius: 6px;
-    font-size: 0.85rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    z-index: 2000;
-}
-
-.tooltip {
-    position: fixed;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #212529;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    opacity: 0.9;
-    z-index: 2000;
+    font-size: 14px;
+    z-index: 1000;
 }
 
 .hidden {
     display: none;
+}
+
+/* Location tooltip */
+#location-tooltip {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    background: #212529;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    z-index: 1000;
+}
+
+/* Locate button */
+.leaflet-control-locate {
+    cursor: pointer;
+    background: white;
+    padding: 6px 8px;
+    font-size: 18px;
+}
+
+.leaflet-control-locate.active {
+    background: #dc3545;
+    color: white;
+}
+
+/* ===== BUILDING NAME LABELS ===== */
+.building-label {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #212529;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
 }
