@@ -1,127 +1,143 @@
-// ===== MAP SETUP =====
-const campusCenter = [15.758844, 78.037691];
-const map = L.map("map", {
-  center: campusCenter,
-  zoom: 18,
-});
+// ===================
+// SUPABASE CONFIG
+// ===================
+const SUPABASE_URL = "https://iistugxdqonjsrxuvpgs.supabase.co";
+const SUPABASE_KEY =
+  "sb_publishable_w33IEM4ohCVNL__Z14grpg_DwJR6DJ4";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+// ===================
+// MAP INIT
+// ===================
+const map = L.map("map").setView(
+  [15.7695, 78.0664], // IIITDM Kurnool approx
+  17
+);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 20,
+  attribution: "© OpenStreetMap contributors",
 }).addTo(map);
 
-// ===== LIVE LOCATION =====
-let userLocation = null;
-let watchId = null;
-let routeLine = null;
+// ===================
+// GLOBAL VARIABLES
+// ===================
+let userMarker = null;
+let routingControl = null;
+let userLatLng = null;
 
-const LocateControl = L.Control.extend({
-  onAdd() {
-    const btn = L.DomUtil.create("div", "leaflet-control-locate");
-    btn.innerHTML = "📍";
+// ===================
+// LIVE LOCATION
+// ===================
+document.getElementById("liveBtn").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
 
-    btn.onclick = () => {
-      if (watchId) stopLocation(btn);
-      else startLocation(btn);
-    };
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      userLatLng = [pos.coords.latitude, pos.coords.longitude];
 
-    return btn;
+      if (userMarker) {
+        userMarker.setLatLng(userLatLng);
+      } else {
+        userMarker = L.marker(userLatLng, {
+          icon: L.icon({
+            iconUrl:
+              "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+            iconSize: [35, 35],
+          }),
+        })
+          .addTo(map)
+          .bindPopup("You are here");
+      }
+
+      map.setView(userLatLng, 18);
+    },
+    () => alert("Location permission denied")
+  );
+});
+
+// ===================
+// CLEAR ROUTE
+// ===================
+document.getElementById("clearRouteBtn").addEventListener("click", () => {
+  if (routingControl) {
+    map.removeControl(routingControl);
+    routingControl = null;
   }
 });
 
-map.addControl(new LocateControl({ position: "topright" }));
+// ===================
+// LOAD LOCATIONS
+// ===================
+async function loadLocations() {
+  const { data, error } = await supabase
+    .from("Location")
+    .select("*");
 
-function startLocation(btn) {
-  btn.classList.add("active");
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-  watchId = navigator.geolocation.watchPosition(pos => {
-    userLocation = [pos.coords.latitude, pos.coords.longitude];
+  data.forEach((loc) => {
+    const latLng = [loc.Lat, loc.Lng];
 
-    if (window.userMarker) map.removeLayer(window.userMarker);
-    window.userMarker = L.circleMarker(userLocation, {
-      radius: 7,
-      fillColor: "#2563eb",
-      color: "#fff",
-      weight: 2,
-      fillOpacity: 1
+    // Marker
+    const marker = L.marker(latLng).addTo(map);
+
+    marker.bindPopup(`
+      <b>${loc.Name}</b><br/>
+      ${loc.Description || ""}
+      <br/><br/>
+      <button onclick="navigateTo(${loc.Lat}, ${loc.Lng})">
+        Navigate
+      </button>
+    `);
+
+    // Name on map
+    L.marker(latLng, {
+      icon: L.divIcon({
+        className: "building-label",
+        html: loc.Name,
+        iconSize: [160, 20],
+        iconAnchor: [80, -10],
+      }),
     }).addTo(map);
   });
 }
 
-function stopLocation(btn) {
-  navigator.geolocation.clearWatch(watchId);
-  watchId = null;
-  btn.classList.remove("active");
-}
+loadLocations();
 
-// ===== ROUTING =====
-function drawRoute(toLatLng) {
-  if (!userLocation) {
+// ===================
+// ROUTING
+// ===================
+window.navigateTo = function (lat, lng) {
+  if (!userLatLng) {
     alert("Enable live location first");
     return;
   }
 
-  clearRoute();
-
-  routeLine = L.polyline([userLocation, toLatLng], {
-    color: "#dc2626",
-    weight: 4
-  }).addTo(map);
-
-  map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
-}
-
-function clearRoute() {
-  if (routeLine) {
-    map.removeLayer(routeLine);
-    routeLine = null;
+  if (routingControl) {
+    map.removeControl(routingControl);
   }
-}
 
-document.getElementById("clearRouteBtn").onclick = clearRoute;
-
-// ===== FOOD COURT BUILDING =====
-const foodCourtCoords = [
-  [15.759034, 78.037565],
-  [15.759212, 78.037613],
-  [15.759261, 78.037474],
-  [15.759137, 78.037434],
-];
-
-const foodCourtCenter = [
-  (15.759034 + 15.759212 + 15.759261 + 15.759137) / 4,
-  (78.037565 + 78.037613 + 78.037474 + 78.037434) / 4
-];
-
-// Polygon
-const foodCourt = L.polygon(foodCourtCoords, {
-  color: "#b45309",
-  fillColor: "#f59e0b",
-  fillOpacity: 0.6,
-  weight: 2
-}).addTo(map);
-
-foodCourt.bindPopup(`
-  <b>🍽️ Food Court</b><br/>
-  Campus dining area<br/><br/>
-  <button onclick="drawRoute([${foodCourtCenter[0]}, ${foodCourtCenter[1]}])">
-    Navigate
-  </button>
-`);
-
-// Label on building
-L.marker(foodCourtCenter, {
-  icon: L.divIcon({
-    className: "building-label",
-    html: "Food Court",
-    iconSize: [100, 20],
-    iconAnchor: [50, 10]
-  })
-}).addTo(map);
-
-// Hover effect
-foodCourt.on("mouseover", () =>
-  foodCourt.setStyle({ fillOpacity: 0.85 })
-);
-foodCourt.on("mouseout", () =>
-  foodCourt.setStyle({ fillOpacity: 0.6 })
-);
+  routingControl = L.Routing.control({
+    waypoints: [
+      L.latLng(userLatLng[0], userLatLng[1]),
+      L.latLng(lat, lng),
+    ],
+    routeWhileDragging: false,
+    addWaypoints: false,
+    draggableWaypoints: false,
+    show: false,
+    lineOptions: {
+      styles: [{ weight: 6 }],
+    },
+  }).addTo(map);
+};
