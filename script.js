@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ===== SUPABASE CONFIG =====
     const SUPABASE_URL = "https://iistugxdqonjsrxuvpgs.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_w33IEM4ohCVNL__Z14grpg_DwJR6DJ4";
+    const SUPABASE_ANON_KEY =
+        "sb_publishable_w33IEM4ohCVNL__Z14grpg_DwJR6DJ4";
 
     const supabase = window.supabase.createClient(
         SUPABASE_URL,
@@ -24,14 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
         attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
-    // ===== LOAD LOCATIONS =====
+    // ===== LOAD LOCATIONS FROM SUPABASE =====
     async function loadCampusLocations() {
         const { data, error } = await supabase
             .from("Location")
             .select("*");
 
         if (error) {
-            console.error(error);
+            console.error("Supabase error:", error.message);
             return;
         }
 
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!loc.Lat || !loc.Lng) return;
 
             const marker = L.circleMarker(
-                [loc.Lat, loc.Lng],
+                [Number(loc.Lat), Number(loc.Lng)],
                 {
                     radius: 6,
                     color: "#dc3545",
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             ).addTo(map);
 
-            // 🔤 Permanent building label
+            // Permanent building name label
             marker.bindTooltip(
                 loc.Name,
                 {
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             );
 
+            // Popup on click
             marker.bindPopup(`
                 <b>${loc.Name}</b><br>
                 <small>${loc.Category}</small><br>
@@ -69,5 +71,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loadCampusLocations();
-
 });
