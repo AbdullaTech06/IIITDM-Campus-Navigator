@@ -6,10 +6,7 @@
     <title>IIITDM Campus Navigator</title>
 
     <!-- Leaflet CSS -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
@@ -20,18 +17,21 @@
     <header class="navbar">
         <h1>IIITDM Campus Navigator</h1>
         <p>Navigate your campus with ease</p>
+
+        <!-- Search -->
+        <input
+            type="text"
+            id="searchBox"
+            placeholder="Search building..."
+        />
     </header>
 
     <!-- Map -->
     <div id="map"></div>
 
-    <!-- Leaflet JS -->
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- Custom JS -->
     <script src="script.js"></script>
 
 </body>
