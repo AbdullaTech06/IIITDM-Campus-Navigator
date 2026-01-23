@@ -5,77 +5,31 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-body {
-    background: #f8f9fa;
-}
-
-.top-bar {
-    background: #dc3545;
+/* Header */
+.navbar {
+    background-color: #dc3545;
     color: white;
     text-align: center;
     padding: 14px 10px;
 }
 
-.top-bar h1 {
+.navbar h1 {
     font-size: 20px;
     font-weight: 700;
 }
 
-.top-bar p {
+.navbar p {
     font-size: 13px;
     opacity: 0.9;
 }
 
+/* Map */
 #map {
     width: 100%;
     height: calc(100vh - 72px);
 }
 
-/* Error message */
-#error-message {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #dc3545;
-    color: white;
-    padding: 10px 14px;
-    border-radius: 6px;
-    font-size: 14px;
-    z-index: 1000;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Location tooltip */
-#location-tooltip {
-    position: fixed;
-    top: 90px;
-    right: 20px;
-    background: #212529;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    z-index: 1000;
-}
-
-/* Locate button */
-.leaflet-control-locate {
-    cursor: pointer;
-    background: white;
-    padding: 6px 8px;
-    font-size: 18px;
-}
-
-.leaflet-control-locate.active {
-    background: #dc3545;
-    color: white;
-}
-
-/* ===== BUILDING NAME LABELS ===== */
+/* Building labels */
 .building-label {
     background: transparent;
     border: none;
@@ -83,7 +37,6 @@ body {
     color: #212529;
     font-size: 12px;
     font-weight: 600;
-    text-align: center;
     pointer-events: none;
     white-space: nowrap;
 }
