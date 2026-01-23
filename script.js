@@ -14,8 +14,8 @@ const supabase = window.supabase.createClient(
 // MAP INIT
 // ===================
 const map = L.map("map").setView(
-  [15.7695, 78.0664], // IIITDM Kurnool approx
-  17
+  [15.75915, 78.03752], // Food Court area
+  18
 );
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -63,17 +63,52 @@ document.getElementById("liveBtn").addEventListener("click", () => {
 });
 
 // ===================
-// CLEAR ROUTE
+// CLEAR ROUTE (FIXED)
 // ===================
 document.getElementById("clearRouteBtn").addEventListener("click", () => {
   if (routingControl) {
+    routingControl.getPlan().setWaypoints([]);
     map.removeControl(routingControl);
     routingControl = null;
   }
 });
 
 // ===================
-// LOAD LOCATIONS
+// FOOD COURT BUILDING
+// ===================
+const foodCourtCoords = [
+  [15.759034, 78.037565],
+  [15.759212, 78.037613],
+  [15.759261, 78.037474],
+  [15.759137, 78.037434],
+];
+
+const foodCourtPolygon = L.polygon(foodCourtCoords, {
+  color: "#dc2626",
+  fillColor: "#fca5a5",
+  fillOpacity: 0.6,
+}).addTo(map);
+
+foodCourtPolygon.bindPopup(`
+  <b>Food Court</b><br/>
+  Campus Dining Area<br/><br/>
+  <button onclick="navigateTo(15.75916, 78.03752)">
+    Navigate
+  </button>
+`);
+
+// Label on building
+L.marker([15.75916, 78.03752], {
+  icon: L.divIcon({
+    className: "building-label",
+    html: "Food Court",
+    iconSize: [120, 20],
+    iconAnchor: [60, -10],
+  }),
+}).addTo(map);
+
+// ===================
+// LOAD LOCATIONS FROM SUPABASE
 // ===================
 async function loadLocations() {
   const { data, error } = await supabase
@@ -81,26 +116,23 @@ async function loadLocations() {
     .select("*");
 
   if (error) {
-    console.error(error);
+    console.error("Supabase error:", error);
     return;
   }
 
   data.forEach((loc) => {
     const latLng = [loc.Lat, loc.Lng];
 
-    // Marker
     const marker = L.marker(latLng).addTo(map);
 
     marker.bindPopup(`
       <b>${loc.Name}</b><br/>
-      ${loc.Description || ""}
-      <br/><br/>
+      ${loc.Description || ""}<br/><br/>
       <button onclick="navigateTo(${loc.Lat}, ${loc.Lng})">
         Navigate
       </button>
     `);
 
-    // Name on map
     L.marker(latLng, {
       icon: L.divIcon({
         className: "building-label",
@@ -115,7 +147,7 @@ async function loadLocations() {
 loadLocations();
 
 // ===================
-// ROUTING
+// ROUTING FUNCTION
 // ===================
 window.navigateTo = function (lat, lng) {
   if (!userLatLng) {
