@@ -4,43 +4,41 @@
   <meta charset="UTF-8" />
   <title>IIITDM Campus Navigator</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   />
 
-  <!-- Your CSS -->
+  <!-- Leaflet Routing -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+  />
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Top Controls -->
-  <div id="top-bar">
-    <input id="searchBox" type="text" placeholder="Search building..." />
-    <button id="clearRouteBtn">Clear Route</button>
+  <div id="controls">
+    <button id="liveBtn">📍 Live Location</button>
+    <button id="clearRouteBtn">❌ Cancel Route</button>
   </div>
 
-  <!-- Tooltip -->
-  <div id="location-tooltip" class="hidden">
-    Click 📍 to show your live location
-  </div>
-
-  <!-- Error -->
-  <div id="error-message" class="hidden"></div>
-
-  <!-- Map -->
   <div id="map"></div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+  <!-- Leaflet Routing -->
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Your JS -->
+  <!-- Custom JS -->
   <script src="script.js"></script>
+
 </body>
 </html>
