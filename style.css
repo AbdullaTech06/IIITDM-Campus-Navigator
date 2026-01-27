@@ -103,6 +103,13 @@ html, body {
   color: #555;
 }
 
+/* same as yours, unchanged */
+
+#stopLiveBtn {
+  background: #7f1d1d;
+}
+
+
 /* Hide routing panel */
 .leaflet-routing-container {
   display: none !important;
