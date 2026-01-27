@@ -1,34 +1,91 @@
-html, body {
+* {
   margin: 0;
   padding: 0;
-  height: 100%;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
 }
 
-#map {
-  height: 100vh;
+html, body {
+  height: 100%;
   width: 100%;
 }
 
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+/* Search */
+#searchContainer {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 420px;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 2px solid #dc2626;
+  font-size: 14px;
+}
+
+#searchResults {
+  background: white;
+  margin-top: 6px;
+  border-radius: 10px;
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.search-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.search-item:hover {
+  background: #fef2f2;
+}
+
+/* Controls */
 #controls {
-  position: fixed;
-  top: 10px;
+  position: absolute;
+  top: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
-button {
-  padding: 10px 14px;
-  border: none;
+#controls button {
+  padding: 8px 12px;
   border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  background: #e53935;
+  border: none;
+  background: #dc2626;
   color: white;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.9;
+/* Info */
+#infoPanel {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  background: white;
+  padding: 12px 14px;
+  border-radius: 10px;
+  z-index: 1000;
+  border-left: 4px solid #dc2626;
+}
+
+.leaflet-routing-container {
+  display: none;
 }
