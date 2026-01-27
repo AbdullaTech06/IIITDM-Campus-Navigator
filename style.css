@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, sans-serif;
 }
 
 html, body {
@@ -10,100 +10,55 @@ html, body {
   overflow: hidden;
 }
 
-body {
-  background: #0f172a;
-}
-
 #map {
   height: 100vh;
   width: 100vw;
-  z-index: 1;
 }
 
-/* =================== */
-/* SEARCH BAR (RED THEME) */
-/* =================== */
+/* Search */
 #searchContainer {
   position: absolute;
-  top: 20px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1001;
+  z-index: 1000;
   width: 90%;
-  max-width: 500px;
+  max-width: 480px;
 }
 
 #searchInput {
   width: 100%;
-  padding: 14px 20px;
-  border: none;
+  padding: 14px 18px;
   border-radius: 12px;
-  font-size: 15px;
-  background: white;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  outline: none;
-  transition: all 0.3s;
-}
-
-#searchInput:focus {
-  box-shadow: 0 10px 40px rgba(220, 38, 38, 0.4);
-  transform: translateY(-2px);
   border: 2px solid #dc2626;
+  outline: none;
+  font-size: 15px;
 }
 
 #searchResults {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  right: 0;
+  margin-top: 6px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  max-height: 400px;
-  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
   display: none;
+  max-height: 320px;
+  overflow-y: auto;
 }
 
-.search-result-item {
-  padding: 12px 16px;
+.search-item {
+  padding: 12px 14px;
   cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background 0.2s;
+  border-bottom: 1px solid #eee;
 }
 
-.search-result-item:hover {
+.search-item:hover {
   background: #fef2f2;
 }
 
-.search-result-item:last-child {
-  border-bottom: none;
-}
-
-/* Custom scrollbar for search results */
-#searchResults::-webkit-scrollbar {
-  width: 8px;
-}
-
-#searchResults::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-#searchResults::-webkit-scrollbar-thumb {
-  background: #fca5a5;
-  border-radius: 10px;
-}
-
-#searchResults::-webkit-scrollbar-thumb:hover {
-  background: #f87171;
-}
-
-/* =================== */
-/* CONTROL BUTTONS (RED THEME) */
-/* =================== */
+/* Controls */
 #controls {
   position: absolute;
-  top: 90px;
+  top: 85px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -112,306 +67,43 @@ body {
 }
 
 #controls button {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+  padding: 10px 16px;
   background: #dc2626;
   color: white;
-  font-size: 14px;
+  border: none;
+  border-radius: 10px;
   font-weight: 600;
-  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
-  transition: all 0.2s;
+  cursor: pointer;
 }
 
 #controls button:hover {
   background: #b91c1c;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.5);
 }
 
-#controls button:active {
-  transform: translateY(0);
-}
-
-/* =================== */
-/* INFO PANEL (RED THEME) */
-/* =================== */
+/* Info panel */
 #infoPanel {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  z-index: 1000;
+  bottom: 16px;
+  left: 16px;
   background: white;
-  padding: 16px 20px;
+  padding: 14px 18px;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  max-width: 320px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
   border-left: 4px solid #dc2626;
+  z-index: 1000;
 }
 
 #infoPanel h3 {
-  font-size: 16px;
-  margin-bottom: 6px;
   color: #dc2626;
+  font-size: 15px;
 }
 
 #infoPanel p {
   font-size: 13px;
-  color: #64748b;
-  margin: 0;
+  color: #555;
 }
-
-/* =================== */
-/* MAP ELEMENTS */
-/* =================== */
 
 /* Hide routing panel */
 .leaflet-routing-container {
   display: none !important;
-}
-
-.leaflet-routing-alt {
-  display: none !important;
-}
-
-/* Building label styling */
-.building-label {
-  background: transparent !important;
-  border: none !important;
-  pointer-events: none;
-}
-
-/* Custom marker */
-.custom-marker {
-  background: transparent !important;
-  border: none !important;
-}
-
-/* User location marker (red theme) */
-.user-location-marker {
-  background: transparent !important;
-  border: none !important;
-  font-size: 24px;
-  text-align: center;
-  line-height: 30px;
-}
-
-/* Pulse animation for user marker (red theme) */
-.pulse-marker {
-  animation: pulse 2s infinite;
-  filter: drop-shadow(0 2px 8px rgba(220, 38, 38, 0.6));
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-/* Custom popup styling (red theme) */
-.leaflet-popup-content-wrapper {
-  border-radius: 12px;
-  padding: 0;
-  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
-  border-top: 3px solid #dc2626;
-}
-
-.leaflet-popup-content {
-  margin: 16px;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.leaflet-popup-tip {
-  background: white;
-}
-
-.leaflet-popup-close-button {
-  font-size: 20px !important;
-  padding: 8px 12px !important;
-  color: #dc2626 !important;
-}
-
-.leaflet-popup-close-button:hover {
-  color: #b91c1c !important;
-}
-
-/* Improve marker visibility */
-.leaflet-marker-icon {
-  filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.3));
-}
-
-/* Route line styling */
-.leaflet-routing-container-hide {
-  display: none;
-}
-
-/* Accuracy circle styling (handled in JS but additional CSS) */
-.leaflet-interactive {
-  pointer-events: auto;
-}
-
-/* =================== */
-/* MOBILE RESPONSIVE */
-/* =================== */
-@media (max-width: 768px) {
-  #searchContainer {
-    width: 95%;
-    top: 15px;
-  }
-
-  #searchInput {
-    padding: 12px 16px;
-    font-size: 14px;
-  }
-
-  #searchResults {
-    top: 55px;
-    max-height: 300px;
-  }
-
-  #controls {
-    top: 75px;
-    flex-direction: row;
-    gap: 8px;
-  }
-
-  #controls button {
-    padding: 8px 14px;
-    font-size: 13px;
-  }
-
-  .building-label span {
-    font-size: 10px !important;
-    padding: 2px 6px !important;
-  }
-
-  #infoPanel {
-    bottom: 15px;
-    left: 15px;
-    right: 15px;
-    max-width: none;
-    padding: 12px 16px;
-  }
-
-  #infoPanel h3 {
-    font-size: 14px;
-  }
-
-  #infoPanel p {
-    font-size: 12px;
-  }
-
-  .leaflet-popup-content-wrapper {
-    max-width: 240px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  #controls {
-    flex-direction: column;
-    gap: 6px;
-    width: 90%;
-  }
-
-  #controls button {
-    width: 100%;
-    padding: 10px 12px;
-  }
-}
-
-/* =================== */
-/* LOADING ANIMATION */
-/* =================== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.search-result-item {
-  animation: fadeIn 0.2s ease-out;
-}
-
-/* =================== */
-/* SCROLLBAR STYLING */
-/* =================== */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #fee2e2;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #fca5a5;
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #f87171;
-}
-
-/* =================== */
-/* ACCESSIBILITY */
-/* =================== */
-button:focus-visible,
-input:focus-visible {
-  outline: 3px solid #dc2626;
-  outline-offset: 2px;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  #controls button {
-    border: 2px solid white;
-  }
-  
-  .building-label span {
-    border: 2px solid #dc2626 !important;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* =================== */
-/* ADDITIONAL RED THEME ACCENTS */
-/* =================== */
-.leaflet-control-zoom-in,
-.leaflet-control-zoom-out {
-  color: #dc2626 !important;
-}
-
-.leaflet-control-zoom-in:hover,
-.leaflet-control-zoom-out:hover {
-  background: #fef2f2 !important;
-}
-
-/* Attribution link colors */
-.leaflet-control-attribution a {
-  color: #dc2626 !important;
-}
-
-.leaflet-control-attribution a:hover {
-  color: #b91c1c !important;
 }
