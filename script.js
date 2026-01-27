@@ -1,39 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= SUPABASE ================= */
-  const SUPABASE_URL = "https://iistugxdqonjsrxuvpgs.supabase.co";
-  const SUPABASE_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlpc3R1Z3hkcW9uanNyeHV2cGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyODE5MzAsImV4cCI6MjA4Mjg1NzkzMH0.QFZKAZnFc-6jrCaOUs0ghAW227OXN1Y2XevOC3BUVX4";
-
   const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+    "https://iistugxdqonjsrxuvpgs.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsImV4cCI6MjA4Mjg1NzkzMH0.QFZKAZnFc-6jrCaOUs0ghAW227OXN1Y2XevOC3BUVX4"
   );
 
   /* ================= MAP ================= */
   const map = L.map("map", {
+    center: [15.759267, 78.037734],
+    zoom: 17,
     minZoom: 15,
     maxZoom: 19
-  }).setView([15.759267, 78.037734], 17);
+  });
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap"
-  }).addTo(map);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+  setTimeout(() => map.invalidateSize(), 300);
 
   let locations = [];
-  let markers = [];
-  let userLatLng = null;
   let routingControl = null;
 
   /* ================= LOAD LOCATIONS ================= */
   async function loadLocations() {
     const { data, error } = await supabase.from("Location").select("*");
-
-    if (error) {
-      document.getElementById("infoPanel").innerHTML =
-        "<h3>⚠️ Error</h3><p>Database load failed</p>";
-      return;
-    }
+    if (error) return;
 
     locations = data;
 
@@ -49,12 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <b>${loc.name}</b><br>
         <small>${loc.category || ""}</small><br><br>
         <button onclick="navigateTo(${loc.lat}, ${loc.lng}, '${loc.name}')"
-          style="padding:8px 12px;background:#dc2626;color:white;border:none;border-radius:6px">
+        style="padding:8px 12px;background:#dc2626;color:white;border:none;border-radius:6px">
           🧭 Navigate Here
         </button>
       `);
-
-      markers.push({ marker, loc });
     });
 
     document.getElementById("infoPanel").innerHTML =
@@ -74,12 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const filtered = locations.filter(l =>
+    searchResults.innerHTML = locations.filter(l =>
       l.name.toLowerCase().includes(q) ||
       (l.category || "").toLowerCase().includes(q)
-    );
-
-    searchResults.innerHTML = filtered.map(l => `
+    ).map(l => `
       <div class="search-item"
         onclick="selectLocation(${l.lat}, ${l.lng}, '${l.name}')">
         <b>${l.name}</b><br>
@@ -98,12 +85,35 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* ================= LIVE LOCATION ================= */
+  let watchId = null;
+  let userMarker = null;
+  let userLatLng = null;
+
   document.getElementById("liveBtn").onclick = () => {
-    navigator.geolocation.getCurrentPosition(pos => {
-      userLatLng = [pos.coords.latitude, pos.coords.longitude];
-      L.marker(userLatLng).addTo(map);
-      map.setView(userLatLng, 18);
-    });
+    if (watchId) return;
+
+    watchId = navigator.geolocation.watchPosition(
+      pos => {
+        userLatLng = [pos.coords.latitude, pos.coords.longitude];
+
+        if (!userMarker) {
+          userMarker = L.marker(userLatLng).addTo(map);
+        } else {
+          userMarker.setLatLng(userLatLng);
+        }
+
+        map.setView(userLatLng, 18);
+      },
+      err => alert(err.message),
+      { enableHighAccuracy: true }
+    );
+  };
+
+  document.getElementById("stopLiveBtn").onclick = () => {
+    if (watchId) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+    }
   };
 
   /* ================= ROUTING ================= */
@@ -116,10 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (routingControl) map.removeControl(routingControl);
 
     routingControl = L.Routing.control({
-      waypoints: [
-        L.latLng(userLatLng),
-        L.latLng(lat, lng)
-      ],
+      waypoints: [L.latLng(userLatLng), L.latLng(lat, lng)],
       lineOptions: {
         styles: [{ color: "#dc2626", weight: 6 }]
       },
