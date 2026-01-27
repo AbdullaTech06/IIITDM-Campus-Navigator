@@ -80,6 +80,10 @@ html, body {
   background: #b91c1c;
 }
 
+#stopLiveBtn {
+  background: #7f1d1d;
+}
+
 /* Info panel */
 #infoPanel {
   position: absolute;
@@ -103,14 +107,7 @@ html, body {
   color: #555;
 }
 
-/* same as yours, unchanged */
-
-#stopLiveBtn {
-  background: #7f1d1d;
-}
-
-
-/* Hide routing panel */
+/* Hide routing instructions panel */
 .leaflet-routing-container {
   display: none !important;
 }
