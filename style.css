@@ -6,24 +6,25 @@
 }
 
 html, body {
-  height: 100%;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 #map {
-  height: 100%;
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 
-/* Search */
+/* Search box */
 #searchContainer {
-  position: absolute;
+  position: fixed;
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
   width: 90%;
-  max-width: 420px;
+  max-width: 400px;
 }
 
 #searchInput {
@@ -34,29 +35,10 @@ html, body {
   font-size: 14px;
 }
 
-#searchResults {
-  background: white;
-  margin-top: 6px;
-  border-radius: 10px;
-  display: none;
-  max-height: 260px;
-  overflow-y: auto;
-}
-
-.search-item {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-.search-item:hover {
-  background: #fef2f2;
-}
-
-/* Controls */
+/* Buttons */
 #controls {
-  position: absolute;
-  top: 80px;
+  position: fixed;
+  top: 70px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -76,7 +58,7 @@ html, body {
 
 /* Info */
 #infoPanel {
-  position: absolute;
+  position: fixed;
   bottom: 14px;
   left: 14px;
   background: white;
@@ -84,8 +66,10 @@ html, body {
   border-radius: 10px;
   z-index: 1000;
   border-left: 4px solid #dc2626;
+  font-size: 14px;
 }
 
+/* Hide routing UI */
 .leaflet-routing-container {
-  display: none;
+  display: none !important;
 }
