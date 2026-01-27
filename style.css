@@ -5,21 +5,19 @@
   font-family: system-ui, sans-serif;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-#map {
-  width: 100vw;
+body {
   height: 100vh;
 }
 
-/* Search box */
-#searchContainer {
-  position: fixed;
-  top: 16px;
+#map {
+  height: 100vh;
+  width: 100%;
+}
+
+/* Top Search Bar */
+.top-bar {
+  position: absolute;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -29,47 +27,55 @@ html, body {
 
 #searchInput {
   width: 100%;
-  padding: 12px 16px;
+  padding: 10px;
   border-radius: 10px;
   border: 2px solid #dc2626;
-  font-size: 14px;
+  outline: none;
+}
+
+#searchResults {
+  background: white;
+  border-radius: 10px;
+  margin-top: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.result-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.result-item:hover {
+  background: #fee2e2;
 }
 
 /* Buttons */
-#controls {
-  position: fixed;
-  top: 70px;
+.controls {
+  position: absolute;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
   display: flex;
-  gap: 8px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-#controls button {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: none;
+button {
   background: #dc2626;
   color: white;
-  font-weight: 600;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
-/* Info */
-#infoPanel {
-  position: fixed;
-  bottom: 14px;
-  left: 14px;
-  background: white;
-  padding: 12px 14px;
-  border-radius: 10px;
-  z-index: 1000;
-  border-left: 4px solid #dc2626;
-  font-size: 14px;
+button:hover {
+  background: #b91c1c;
 }
 
-/* Hide routing UI */
+/* Red route */
 .leaflet-routing-container {
-  display: none !important;
+  display: none;
 }
