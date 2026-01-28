@@ -11,7 +11,7 @@
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   />
 
-  <!-- Leaflet Routing -->
+  <!-- Routing -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
@@ -20,26 +20,31 @@
   <!-- Supabase -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
+  <!-- App CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- Search -->
   <div class="top-bar">
-    <input id="searchInput" type="text" placeholder="Search location..." />
+    <input id="searchInput" type="text" placeholder="Search campus locations..." />
     <div id="searchResults"></div>
   </div>
 
+  <!-- Controls -->
   <div class="controls">
-    <button id="liveBtn">Show Live Location</button>
-    <button id="stopLiveBtn">Cancel Live</button>
-    <button id="cancelRouteBtn">Cancel Route</button>
+    <button id="liveBtn">📍 Show Live</button>
+    <button id="stopLiveBtn">❌ Cancel Live</button>
+    <button id="cancelRouteBtn">❌ Cancel Route</button>
   </div>
 
+  <!-- Map -->
   <div id="map"></div>
 
-  <!-- JS -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>
