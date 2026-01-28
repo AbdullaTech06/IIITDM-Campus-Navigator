@@ -16,8 +16,8 @@
 
   <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
 
+<body>
   <div class="top-bar">
     <input id="searchInput" placeholder="Search buildings, labs, hostels..." />
     <div id="searchResults"></div>
@@ -35,6 +35,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
-  <script src="script.js"></script>
+  <!-- IMPORTANT: defer -->
+  <script src="script.js" defer></script>
 </body>
 </html>
