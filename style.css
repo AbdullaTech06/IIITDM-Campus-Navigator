@@ -1,64 +1,84 @@
-html, body {
+* {
   margin: 0;
-  height: 100%;
+  padding: 0;
+  box-sizing: border-box;
   font-family: system-ui, sans-serif;
 }
 
-#map {
+html, body {
   height: 100%;
+}
+
+#map {
+  height: 100vh;
   width: 100%;
 }
 
-/* Bottom panel */
-.panel {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #fff;
-  padding: 10px;
-  box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
-  border-radius: 16px 16px 0 0;
+/* Search */
+#searchBox {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 420px;
 }
 
-.panel input {
+#searchInput {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 8px;
+  border: 2px solid #dc2626;
+  outline: none;
 }
 
-.chips {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  margin-bottom: 8px;
+#searchResults {
+  background: white;
+  margin-top: 6px;
+  border-radius: 10px;
+  max-height: 260px;
+  overflow-y: auto;
+  display: none;
 }
 
-.chip {
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: #eee;
-  white-space: nowrap;
+.result {
+  padding: 10px;
   cursor: pointer;
+  border-bottom: 1px solid #eee;
 }
 
-.chip.active {
-  background: #d32f2f;
-  color: white;
+.result:hover {
+  background: #fee2e2;
 }
 
-.buttons {
+/* Controls */
+#controls {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
   display: flex;
-  gap: 6px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #d32f2f;
+  background: #dc2626;
   color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
   font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #b91c1c;
+}
+
+/* Hide routing UI */
+.leaflet-routing-container {
+  display: none !important;
 }
