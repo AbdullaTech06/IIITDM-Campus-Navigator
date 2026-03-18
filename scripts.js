@@ -135,6 +135,10 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (markerObj) {
             markerObj.marker.openPopup();
           }
+          // Close the search results and hide keyboard
+          searchResults.innerHTML = "";
+          searchInput.value = l.Name;
+          searchInput.blur();
         };
         searchResults.appendChild(div);
       });
