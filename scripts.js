@@ -93,6 +93,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   let routingControl = null;
   let destination = null;
   let destPulseMarker = null;
+  let routingAttempt = 0;
+  const ROUTING_BACKENDS = [
+    // Default public OSRM (sometimes blocked by certain mobile networks)
+    "https://router.project-osrm.org/route/v1",
+    // Alternative OSRM instance (often works when the default is blocked)
+    "https://routing.openstreetmap.de/routed-foot/route/v1"
+  ];
 
   /* ================= LOAD LOCATIONS ================= */
   const { data, error } = await supabase.from("Location").select("*");
@@ -271,6 +278,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ================= ROUTING ================= */
   window.navigateTo = (lat, lng) => {
     destination = [lat, lng];
+    routingAttempt = 0;
     setRouteStatus("Routing…", 0);
     if (!userMarker) {
       setRouteStatus("");
@@ -299,7 +307,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       waypoints: [startLL, endLL],
       // Explicit HTTPS routing backend (avoids mixed-content blocks on phones)
       router: L.Routing.osrmv1({
-        serviceUrl: 'https://router.project-osrm.org/route/v1',
+        serviceUrl: ROUTING_BACKENDS[Math.min(routingAttempt, ROUTING_BACKENDS.length - 1)],
         profile: 'foot'
       }),
       lineOptions: {
@@ -317,8 +325,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       })
       .on('routingerror', (e) => {
         console.error('Routing error:', e);
+        // Retry once with an alternative backend if available
+        if (routingAttempt < ROUTING_BACKENDS.length - 1) {
+          routingAttempt += 1;
+          setRouteStatus("Routing… (retrying)", 0);
+          try {
+            map.removeControl(routingControl);
+          } catch {}
+          routingControl = null;
+          updateRoute(startLL, endLL);
+          return;
+        }
+
         setRouteStatus("");
-        alert("Route failed to load. This is usually due to network restrictions or blocked routing service. Please try again on a different network.");
+        alert("Route failed to load on your network. Try switching between mobile data and Wi‑Fi, or use a VPN.");
       })
       .addTo(map);
   }
