@@ -405,3 +405,47 @@ body {
 #themeToggleBtn:hover {
   background: #334155;
 }
+
+/* ================= MOBILE RESPONSIVENESS ================= */
+@media (max-width: 600px) {
+  .landing-title {
+    font-size: 1.8rem;
+  }
+
+  .landing-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .primary-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  .glass-panel {
+    padding: 2rem 1.5rem;
+  }
+
+  .controls {
+    width: 95%;
+    gap: 8px;
+    bottom: 10px;
+    justify-content: center;
+  }
+
+  .controls button {
+    flex: 1 1 calc(50% - 8px);
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .top-bar {
+    width: 95%;
+    top: 10px;
+  }
+
+  #searchInput {
+    padding: 10px 12px;
+  }
+}
