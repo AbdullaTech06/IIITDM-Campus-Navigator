@@ -1,11 +1,11 @@
-const CACHE_NAME = 'navigator-cache-v1';
+const CACHE_NAME = 'navigator-cache-v2';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/styles.css',
-    '/styles.css?v=2',
-    '/scripts.js',
-    '/scripts.js?v=2',
+    './',
+    './index.html',
+    './styles.css',
+    './styles.css?v=4',
+    './scripts.js',
+    './scripts.js?v=4',
     // Cache the external libraries we use (Leaflet & Routing)
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
     'https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css',
@@ -16,10 +16,28 @@ const ASSETS_TO_CACHE = [
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
+        caches.open(CACHE_NAME).then(async (cache) => {
             console.log('Opened cache');
-            return cache.addAll(ASSETS_TO_CACHE);
+            const results = await Promise.allSettled(
+                ASSETS_TO_CACHE.map((url) => cache.add(url))
+            );
+            const failed = results.filter((r) => r.status === 'rejected');
+            if (failed.length) {
+                console.warn('Some assets failed to cache during install:', failed.length);
+            }
         })
+    );
+});
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keys) =>
+            Promise.all(
+                keys
+                    .filter((k) => k.startsWith('navigator-cache-') && k !== CACHE_NAME)
+                    .map((k) => caches.delete(k))
+            )
+        )
     );
 });
 

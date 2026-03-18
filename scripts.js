@@ -26,7 +26,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   /* ================= SERVICE WORKER / PWA ================= */
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
+    // Use relative path so it works on GitHub Pages subpaths (/repo-name/)
+    navigator.serviceWorker.register('./sw.js')
       .then(registration => {
         console.log('Service Worker registered with scope:', registration.scope);
       })
