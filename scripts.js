@@ -175,7 +175,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
     { capture: true, passive: false }
   );
-
   /* ================= SEARCH ================= */
   const searchInput = document.getElementById("searchInput");
   const searchResults = document.getElementById("searchResults");
@@ -272,57 +271,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.navigateTo = (lat, lng) => {
     destination = [lat, lng];
     setRouteStatus("Routing…", 0);
-    getStartLatLng((startLatLng) => {
-      if (!startLatLng) {
-        setRouteStatus("");
-        alert("Could not determine a starting point. Please enable location or pan the map.");
-        return;
-      }
-      updateRoute(startLatLng, destination);
-    });
+    if (!userMarker) {
+      setRouteStatus("");
+      alert("Please tap “📍 Show Live” first so routing can start from your current location.");
+      return;
+    }
+    updateRoute(userMarker.getLatLng(), destination);
   };
-
-  function getStartLatLng(callback) {
-    // 1) If user is live-tracking, use that position
-    if (userMarker) {
-      callback(userMarker.getLatLng());
-      return;
-    }
-
-    // 2) Try a one-time high-accuracy geolocation fix
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          callback([pos.coords.latitude, pos.coords.longitude]);
-        },
-        (err) => {
-          console.warn("getCurrentPosition error:", err);
-          // 3) Fallback to map center (works even if GPS is blocked)
-          try {
-            const center = map.getCenter();
-            callback([center.lat, center.lng]);
-          } catch {
-            callback(null);
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 6000,
-          maximumAge: 10000
-        }
-      );
-      return;
-    }
-
-    // 4) Final fallback: map center if available
-    try {
-      const center = map.getCenter();
-      callback([center.lat, center.lng]);
-    } catch {
-      callback(null);
-    }
-  }
-
   function updateRoute(start, end) {
     if (routingControl) map.removeControl(routingControl);
     if (destPulseMarker) map.removeLayer(destPulseMarker);
