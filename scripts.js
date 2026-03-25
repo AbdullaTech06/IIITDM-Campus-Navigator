@@ -121,14 +121,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const buildingDetails = {
     "Administrative Building": "<b>Ground Floor:</b> SIC Lab<br><b>1st Floor:</b> All Associate Deans (LG-07, LG-04), Dining Room (LG-05), Chairman (LG-06)<br><b>2nd Floor:</b> Purchase Section (G04), Accounts Section (G05), Administration Section (G06), Academics Section (G07)<br><b>3rd Floor:</b> Store Room (105), Communications",
+    "Administrative Block": "<b>Ground Floor:</b> SIC Lab<br><b>1st Floor:</b> All Associate Deans (LG-07, LG-04), Dining Room (LG-05), Chairman (LG-06)<br><b>2nd Floor:</b> Purchase Section (G04), Accounts Section (G05), Administration Section (G06), Academics Section (G07)<br><b>3rd Floor:</b> Store Room (105), Communications",
     "Department of CSE": "<b>Ground Floor:</b> Project Room<br><b>1st Floor:</b> Computing Lab<br><b>2nd Floor:</b> Software Design and Product Level<br><b>3rd Floor:</b> Analog Circuits Lab",
+    "CSE Block": "<b>Ground Floor:</b> Project Room<br><b>1st Floor:</b> Computing Lab<br><b>2nd Floor:</b> Software Design and Product Level<br><b>3rd Floor:</b> Analog Circuits Lab",
     "Kalam Hostel": "<b>Ground Floor:</b> Barber",
+    "KALAM boys Hostel": "<b>Ground Floor:</b> Barber",
     "Seminar Hall Complex": "<b>Ground Floor:</b> Cafe<br><b>1st Floor:</b> Hundri Seminar Hall, Krishna Seminar Hall<br><b>2nd Floor:</b> Tungabhadra Seminar Hall<br><b>3rd Floor:</b> Seminar Hall Complex",
+    "Seminar Hall Block": "<b>Ground Floor:</b> Cafe<br><b>1st Floor:</b> Hundri Seminar Hall, Krishna Seminar Hall<br><b>2nd Floor:</b> Tungabhadra Seminar Hall<br><b>3rd Floor:</b> Seminar Hall Complex",
     "Department of Mechanical": "<b>Ground Floor:</b> Thermal and Fluids Lab, Material Processing and Tech Lab, Design and Dynamics Lab<br><b>1st Floor:</b> HOD Cabin, Department Office, Faculty Cabin of Mechanical, Robotics Lab, DREAAMS Lab",
+    "Mechanical Engineering block": "<b>Ground Floor:</b> Thermal and Fluids Lab, Material Processing and Tech Lab, Design and Dynamics Lab<br><b>1st Floor:</b> HOD Cabin, Department Office, Faculty Cabin of Mechanical, Robotics Lab, DREAAMS Lab",
     "Department of ECE": "<b>Ground Floor:</b> ECE Faculty Cabin, DSP Lab, Electrical Drives and instrumentation Lab, Drones Lab, Embedded Systems and IOT Lab, Microprocessor and Microcontroller Lab, VLSI and DSP Lab<br><b>1st Floor:</b> EC101, ME101, Computational Lab, High Performance Computing and Research<br><b>2nd Floor:</b> EC201, ME201, Artificial Intelligence and Data Science Lab, Cyber Physical System Lab<br><b>3rd Floor:</b> ...",
     "ECE Department": "<b>Ground Floor:</b> ECE Faculty Cabin, DSP Lab, Electrical Drives and instrumentation Lab, Drones Lab, Embedded Systems and IOT Lab, Microprocessor and Microcontroller Lab, VLSI and DSP Lab<br><b>1st Floor:</b> EC101, ME101, Computational Lab, High Performance Computing and Research<br><b>2nd Floor:</b> EC201, ME201, Artificial Intelligence and Data Science Lab, Cyber Physical System Lab<br><b>3rd Floor:</b> ...",
+    "ECE Block": "<b>Ground Floor:</b> ECE Faculty Cabin, DSP Lab, Electrical Drives and instrumentation Lab, Drones Lab, Embedded Systems and IOT Lab, Microprocessor and Microcontroller Lab, VLSI and DSP Lab<br><b>1st Floor:</b> EC101, ME101, Computational Lab, High Performance Computing and Research<br><b>2nd Floor:</b> EC201, ME201, Artificial Intelligence and Data Science Lab, Cyber Physical System Lab<br><b>3rd Floor:</b> ...",
     "Dining Hall": "<b>Ground Floor:</b> Veg Section, Girls Section<br><b>1st Floor:</b> 1st Year, Non-Veg Section",
-    "DOS Faculty Cabins": "<b>All Floors:</b> Info coming soon"
+    "Hill top dining hall (mess)": "<b>Ground Floor:</b> Veg Section, Girls Section<br><b>1st Floor:</b> 1st Year, Non-Veg Section",
+    "DOS Faculty Cabins": "<b>All Floors:</b> Info coming soon",
+    "Staff Quarters": "<b>All Floors:</b> Info coming soon"
   };
 
   locations.forEach(loc => {
