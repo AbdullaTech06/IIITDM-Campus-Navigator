@@ -1,11 +1,11 @@
-const CACHE_NAME = 'navigator-cache-v2';
+const CACHE_NAME = 'navigator-cache-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './styles.css',
-    './styles.css?v=4',
+    './styles.css?v=5',
     './scripts.js',
-    './scripts.js?v=4',
+    './scripts.js?v=5',
     // Cache the external libraries we use (Leaflet & Routing)
     'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
     'https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css',
