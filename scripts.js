@@ -24,16 +24,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  /* ================= SERVICE WORKER / PWA ================= */
+  /* ================= SERVICE WORKER / PWA (KILL SWITCH) ================= */
   if ('serviceWorker' in navigator) {
-    // Use relative path so it works on GitHub Pages subpaths (/repo-name/)
-    navigator.serviceWorker.register('./sw.js')
-      .then(registration => {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch(error => {
-        console.error('Service Worker registration failed:', error);
-      });
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister();
+        console.log('Service Worker unregistered.');
+      }
+    });
   }
 
   /* ================= LANDING PAGE ================= */
