@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>IIITDM Campus Navigator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA Settings -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/854/854878.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Routing -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <!-- App CSS -->
+  <link rel="stylesheet" href="styles.css?v=2" />
+</head>
+
+<body>
+  <!-- Premium Landing Page -->
+  <div id="landing-page" class="landing-overlay">
+    <div class="landing-content glass-panel">
+      <div class="logo-placeholder">📍</div>
+      <h1 class="landing-title">IIITDM Campus Navigator</h1>
+      <p class="landing-subtitle">Discover your campus with seamless routing, live tracking, and an intuitive map
+        experience.</p>
+      <button id="getStartedBtn" class="primary-btn pulse-glow">Explore Campus</button>
+    </div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+
+  <!-- Search -->
+  <div class="top-bar">
+    <input id="searchInput" type="text" placeholder="Search campus locations..." />
+    <div id="searchResults"></div>
+  </div>
+  <!-- Controls -->
+  <div class="controls">
+    <button id="themeToggleBtn">🌙 Dark Mode</button>
+    <button id="liveBtn">📍 Show Live</button>
+    <button id="stopLiveBtn">❌ Cancel Live</button>
+    <button id="cancelRouteBtn">❌ Cancel Route</button>
+  </div>
+  <!-- Map -->
+  <div id="map"></div>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+  <script src="scripts.js?v=2"></script>
+</body>
+
+</html>

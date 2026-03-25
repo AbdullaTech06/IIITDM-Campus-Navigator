@@ -1,33 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-  /* ================= MINI STATUS TOAST (MOBILE DEBUG) ================= */
-  const routeStatusEl = document.createElement("div");
-  routeStatusEl.id = "routeStatus";
-  routeStatusEl.style.cssText =
-    "position:fixed;left:50%;top:14px;transform:translateX(-50%);" +
-    "z-index:10000;max-width:92vw;padding:10px 12px;border-radius:12px;" +
-    "background:rgba(15,23,42,.92);color:#f8fafc;font:600 14px system-ui;" +
-    "box-shadow:0 10px 25px rgba(0,0,0,.35);display:none;text-align:center;";
-  document.body.appendChild(routeStatusEl);
-
-  const setRouteStatus = (msg, showMs = 2500) => {
-    if (!msg) {
-      routeStatusEl.style.display = "none";
-      routeStatusEl.textContent = "";
-      return;
-    }
-    routeStatusEl.textContent = msg;
-    routeStatusEl.style.display = "block";
-    if (showMs > 0) {
-      window.clearTimeout(setRouteStatus._t);
-      setRouteStatus._t = window.setTimeout(() => setRouteStatus(""), showMs);
-    }
-  };
-
   /* ================= SERVICE WORKER / PWA ================= */
   if ('serviceWorker' in navigator) {
-    // Use relative path so it works on GitHub Pages subpaths (/repo-name/)
-    navigator.serviceWorker.register('./sw.js')
+    navigator.serviceWorker.register('/sw.js')
       .then(registration => {
         console.log('Service Worker registered with scope:', registration.scope);
       })
@@ -93,13 +68,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   let routingControl = null;
   let destination = null;
   let destPulseMarker = null;
-  let routingAttempt = 0;
-  const ROUTING_BACKENDS = [
-    // Default public OSRM (sometimes blocked by certain mobile networks)
-    "https://router.project-osrm.org/route/v1",
-    // Alternative OSRM instance (often works when the default is blocked)
-    "https://routing.openstreetmap.de/routed-foot/route/v1"
-  ];
 
   /* ================= LOAD LOCATIONS ================= */
   const { data, error } = await supabase.from("Location").select("*");
@@ -119,18 +87,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("Loaded locations:", data);
   locations = data;
 
-  const buildingDetails = {
-    "Administrative Building": "<b>Ground Floor:</b> SIC Lab<br><b>1st Floor:</b> All Associate Deans (LG-07, LG-04), Dining Room (LG-05), Chairman (LG-06)<br><b>2nd Floor:</b> Purchase Section (G04), Accounts Section (G05), Administration Section (G06), Academics Section (G07)<br><b>3rd Floor:</b> Store Room (105), Communications",
-    "Department of CSE": "<b>Ground Floor:</b> Project Room<br><b>1st Floor:</b> Computing Lab<br><b>2nd Floor:</b> Software Design and Product Level<br><b>3rd Floor:</b> Analog Circuits Lab",
-    "Kalam Hostel": "<b>Ground Floor:</b> Barber",
-    "Seminar Hall Complex": "<b>Ground Floor:</b> Cafe<br><b>1st Floor:</b> Hundri Seminar Hall, Krishna Seminar Hall<br><b>2nd Floor:</b> Tungabhadra Seminar Hall<br><b>3rd Floor:</b> Seminar Hall Complex",
-    "Department of Mechanical": "<b>Ground Floor:</b> Thermal and Fluids Lab, Material Processing and Tech Lab, Design and Dynamics Lab<br><b>1st Floor:</b> HOD Cabin, Department Office, Faculty Cabin of Mechanical, Robotics Lab, DREAAMS Lab",
-    "Department of ECE": "<b>Ground Floor:</b> ECE Faculty Cabin, DSP Lab, Electrical Drives and instrumentation Lab, Drones Lab, Embedded Systems and IOT Lab, Microprocessor and Microcontroller Lab, VLSI and DSP Lab<br><b>1st Floor:</b> EC101, ME101, Computational Lab, High Performance Computing and Research<br><b>2nd Floor:</b> EC201, ME201, Artificial Intelligence and Data Science Lab, Cyber Physical System Lab<br><b>3rd Floor:</b> ...",
-    "ECE Department": "<b>Ground Floor:</b> ECE Faculty Cabin, DSP Lab, Electrical Drives and instrumentation Lab, Drones Lab, Embedded Systems and IOT Lab, Microprocessor and Microcontroller Lab, VLSI and DSP Lab<br><b>1st Floor:</b> EC101, ME101, Computational Lab, High Performance Computing and Research<br><b>2nd Floor:</b> EC201, ME201, Artificial Intelligence and Data Science Lab, Cyber Physical System Lab<br><b>3rd Floor:</b> ...",
-    "Dining Hall": "<b>Ground Floor:</b> Veg Section, Girls Section<br><b>1st Floor:</b> 1st Year, Non-Veg Section",
-    "DOS Faculty Cabins": "<b>All Floors:</b> Info coming soon"
-  };
-
   locations.forEach(loc => {
     const marker = L.circleMarker([loc.Lat, loc.Lng], {
       radius: 8,
@@ -139,23 +95,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       fillOpacity: 1
     }).addTo(map);
 
-    let extraDetails = "";
-    const locName = loc.Name ? loc.Name.trim() : "";
-    if (buildingDetails[locName]) {
-      extraDetails = `<div class="popup-floor-info" style="margin-top:8px; margin-bottom:12px; font-size:0.9em; line-height:1.4; color:#cbd5e1; background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.1); text-align: left;">${buildingDetails[locName]}</div>`;
-    }
-
     marker.bindPopup(`
       <div class="popup-title">${loc.Name}</div>
       <div class="popup-category">${loc.Category || ""}</div>
       <div class="popup-desc">${loc.Description || ""}</div>
-      ${extraDetails}
-      <button
-        type="button"
-        class="primary-btn popup-btn popup-route-btn"
-        data-lat="${loc.Lat}"
-        data-lng="${loc.Lng}"
-      >
+      <button onclick="navigateTo(${loc.Lat}, ${loc.Lng})" class="primary-btn popup-btn">
         🧭 Show Route
       </button>
     `);
@@ -165,43 +109,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   console.log("Markers created:", markers.length);
 
-  // Mobile-safe handler for popup "Show Route" button.
-  // Inline onclick is flaky on some mobile browsers inside Leaflet popups.
-  document.addEventListener(
-    "click",
-    (e) => {
-      const btn = e.target?.closest?.(".popup-route-btn");
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-
-      const lat = Number(btn.getAttribute("data-lat"));
-      const lng = Number(btn.getAttribute("data-lng"));
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-        alert("Invalid destination coordinates.");
-        return;
-      }
-      window.navigateTo(lat, lng);
-    },
-    true // capture to beat Leaflet's internal handlers
-  );
-
-  // Also support touchstart for mobile Safari/Chrome where click can be delayed/suppressed.
-  document.addEventListener(
-    "touchstart",
-    (e) => {
-      const btn = e.target?.closest?.(".popup-route-btn");
-      if (!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-
-      const lat = Number(btn.getAttribute("data-lat"));
-      const lng = Number(btn.getAttribute("data-lng"));
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-      window.navigateTo(lat, lng);
-    },
-    { capture: true, passive: false }
-  );
   /* ================= SEARCH ================= */
   const searchInput = document.getElementById("searchInput");
   const searchResults = document.getElementById("searchResults");
@@ -228,10 +135,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (markerObj) {
             markerObj.marker.openPopup();
           }
-          // Close the search results and hide keyboard
-          searchResults.innerHTML = "";
-          searchInput.value = l.Name;
-          searchInput.blur();
         };
         searchResults.appendChild(div);
       });
@@ -297,21 +200,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ================= ROUTING ================= */
   window.navigateTo = (lat, lng) => {
     destination = [lat, lng];
-    routingAttempt = 0;
-    setRouteStatus("Routing…", 0);
-    if (!userMarker) {
-      setRouteStatus("");
-      alert("Please tap “📍 Show Live” first so routing can start from your current location.");
-      return;
-    }
+    if (!userMarker) return;
     updateRoute(userMarker.getLatLng(), destination);
   };
+
   function updateRoute(start, end) {
     if (routingControl) map.removeControl(routingControl);
     if (destPulseMarker) map.removeLayer(destPulseMarker);
-
-    const startLL = L.latLng(start);
-    const endLL = L.latLng(end);
 
     // Add pulsing marker to destination
     const pulseIcon = L.divIcon({
@@ -320,15 +215,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       iconSize: [20, 20]
     });
 
-    destPulseMarker = L.marker(endLL, { icon: pulseIcon }).addTo(map);
+    destPulseMarker = L.marker(end, { icon: pulseIcon }).addTo(map);
 
     routingControl = L.Routing.control({
-      waypoints: [startLL, endLL],
-      // Explicit HTTPS routing backend (avoids mixed-content blocks on phones)
-      router: L.Routing.osrmv1({
-        serviceUrl: ROUTING_BACKENDS[Math.min(routingAttempt, ROUTING_BACKENDS.length - 1)],
-        profile: 'foot'
-      }),
+      waypoints: [start, end],
       lineOptions: {
         styles: [
           { color: "#dc2626", weight: 6, className: 'animated-route' }
@@ -338,28 +228,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       draggableWaypoints: false,
       fitSelectedRoutes: true,
       show: false
-    })
-      .on('routesfound', () => {
-        setRouteStatus("");
-      })
-      .on('routingerror', (e) => {
-        console.error('Routing error:', e);
-        // Retry once with an alternative backend if available
-        if (routingAttempt < ROUTING_BACKENDS.length - 1) {
-          routingAttempt += 1;
-          setRouteStatus("Routing… (retrying)", 0);
-          try {
-            map.removeControl(routingControl);
-          } catch {}
-          routingControl = null;
-          updateRoute(startLL, endLL);
-          return;
-        }
-
-        setRouteStatus("");
-        alert("Route failed to load on your network. Try switching between mobile data and Wi‑Fi, or use a VPN.");
-      })
-      .addTo(map);
+    }).addTo(map);
   }
 
   document.getElementById("cancelRouteBtn").onclick = () => {
