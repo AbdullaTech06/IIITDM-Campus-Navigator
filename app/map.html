@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IIITDM Campus Navigator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <!-- Routing -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"
+  />
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <!-- App CSS -->
+  <link rel="stylesheet" href="../assets/css/global.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <h2 class="loading-text">Loading Navigator...</h2>
+  </div>
+
+  <!-- Back to Home -->
+  <a href="../index.html" class="back-btn">← Back to Home</a>
+  
+  <!-- Theme Toggle -->
+  <button id="themeToggle" class="theme-toggle">🌙</button>
+
+  <!-- Search -->
+  <div class="top-bar">
+    <div class="search-container">
+      <input id="searchInput" type="text" placeholder="Search campus locations..." />
+      <span class="search-icon">🔍</span>
+    </div>
+    <div id="searchResults"></div>
+    <!-- Action Chips -->
+    <div class="quick-chips">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="hostel">🛏️ Hostels</button>
+      <button class="chip" data-filter="academic">🏫 Academic</button>
+      <button class="chip" data-filter="food">🍔 Dining</button>
+      <button class="chip" data-filter="lab">🔬 Labs</button>
+      <button class="chip" data-filter="admin">🏢 Admin</button>
+    </div>
+  </div>
+  <!-- Controls -->
+  <div class="controls">
+    <button id="liveBtn">🛰️ Show Live</button>
+    <button id="stopLiveBtn">❌ Cancel Live</button>
+    <button id="cancelRouteBtn">❌ Cancel Route</button>
+  </div>
+
+  <!-- Custom Zoom Controls -->
+  <div class="custom-zoom-controls">
+    <button id="zoomInBtn">+</button>
+    <button id="zoomOutBtn">−</button>
+  </div>
+
+  <!-- Detail Bottom Panel -->
+  <div id="detailPanel" class="detail-panel">
+    <div class="panel-drag-handle"></div>
+    <div class="panel-header">
+      <h3 id="panelTitle">Location Name</h3>
+      <button id="closePanelBtn" class="close-panel">✕</button>
+    </div>
+    <div id="panelSubtitle" class="panel-subtitle">Category</div>
+    <div id="panelRooms" class="panel-rooms"></div>
+    <button id="panelNavigateBtn" class="panel-cta">🧭 Navigate Here</button>
+  </div>
+  <!-- Map -->
+  <div id="map"></div>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    // Check saved preference or default to dark (since we liked it)
+    const savedTheme = localStorage.getItem('mapDarkMode');
+    const isDark = savedTheme === 'true' || savedTheme === null;
+
+    if (isDark) {
+      body.classList.add('dark-mode');
+      themeToggle.textContent = '☀️';
+    } else {
+      themeToggle.textContent = '🌙';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const darkActive = body.classList.contains('dark-mode');
+      themeToggle.textContent = darkActive ? '☀️' : '🌙';
+      localStorage.setItem('mapDarkMode', darkActive);
+    });
+  </script>
+</body>
+</html>
